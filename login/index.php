@@ -1,6 +1,6 @@
 <?php
 function handleCORS() {
-    header('Access-Control-Allow-Origin: *'); // Cambia esto si quieres restringir
+    header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');
     header('Access-Control-Max-Age: 1728000');
@@ -13,8 +13,6 @@ function handleCORS() {
 }
 
 handleCORS();
-
-include_once("../../db.php");
 
 // Obtener el cuerpo del request
 $data = json_decode(file_get_contents("php://input"), true);
@@ -29,22 +27,21 @@ if (!$correo || !$contrasena) {
     exit();
 }
 
-// Buscar el usuario por correo
-$stmt = $conn->prepare("SELECT * FROM usuario WHERE correo = ?");
-$stmt->bind_param("s", $correo);
-$stmt->execute();
-$res = $stmt->get_result();
+// ------------------------------
+//  USUARIO HARDCODEADO
+// ------------------------------
+$usuario_valido = "usuario@mep.go.cr";
+$contrasena_valida = "12345";
 
-if ($res->num_rows === 0) {
+// Validar correo
+if ($correo !== $usuario_valido) {
     http_response_code(401);
     echo json_encode(["error" => "Usuario no encontrado"]);
     exit();
 }
 
-$usuario = $res->fetch_assoc();
-
-// Verificar contraseña en texto plano
-if ($usuario['contrasena'] !== $contrasena) {
+// Validar contraseña
+if ($contrasena !== $contrasena_valida) {
     http_response_code(401);
     echo json_encode(["error" => "Contraseña incorrecta"]);
     exit();
@@ -54,10 +51,10 @@ if ($usuario['contrasena'] !== $contrasena) {
 echo json_encode([
     "success" => true,
     "user" => [
-        "id" => $usuario["id"],
-        "nombre" => $usuario["nombre"],
-        "correo" => $usuario["correo"],
-        "rol" => $usuario["rol"]
+        "id" => 1,
+        "nombre" => "Usuario de Prueba",
+        "correo" => $usuario_valido,
+        "rol" => "admin"
     ]
 ]);
 exit();
