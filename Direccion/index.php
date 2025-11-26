@@ -115,8 +115,8 @@ if ($method === 'GET') {
  *   {
  *     "ID_Direccion": 5,       // Opcional: si no se proporciona, se auto-incrementa
  *     "ID_Provincia": 1,       // Obligatorio (FK a provincia)
- *     "ID_Distrito": 2,        // Obligatorio (FK a distrito)
- *     "ID_Canton": 3,          // Obligatorio (FK a canton)
+ *     "ID_Distrito": 10101,        // Obligatorio (FK a distrito)
+ *     "ID_Canton": 101,          // Obligatorio (FK a canton)
  *     "Avenida": "Av. 1",    // Opcional
  *     "Calle": "Calle 2",     // Opcional
  *     "Circuito": "C-3",     // Opcional
