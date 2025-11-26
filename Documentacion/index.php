@@ -150,7 +150,7 @@ if ($method === 'POST') {
  * PUT: Actualiza una institución existente
  *
  * Parámetros esperados:
- *   URL: ?id=<ID>
+ *   URL: ?id_resolucion=<ID>&id_institucion=<ID>
  *   Body (JSON): cualquiera de los campos a actualizar (al menos uno)
  */
 if ($method === 'PUT') {
@@ -218,7 +218,7 @@ if ($method === 'PUT') {
  * DELETE: Elimina una institución
  *
  * Parámetros esperados:
- *   URL: ?id=<ID>
+ *   URL: ?id_resolucion=<ID>&id_institucion=<ID>
  */
 if ($method === 'DELETE') {
     // Extrae identificadores de la query string
