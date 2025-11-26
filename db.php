@@ -21,7 +21,7 @@
 // Valores por defecto (cambiar si es necesario)
 $DB_HOST = getenv('DB_HOST') ?: '127.0.0.1';
 $DB_PORT = getenv('DB_PORT') ?: '3306';
-$DB_NAME = getenv('DB_NAME') ?: 'sigedep';
+$DB_NAME = getenv('DB_NAME') ?: 'sigedep_bd';
 $DB_USER = getenv('DB_USER') ?: 'root';
 $DB_PASS = getenv('DB_PASS') ?: '';
 

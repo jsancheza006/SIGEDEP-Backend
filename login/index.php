@@ -27,7 +27,7 @@ header('Content-Type: application/json');
 
 // Incluye el archivo de conexión a la base de datos.
 // Asume que está en una ruta relativa correcta y proporciona la variable $conn.
-include_once "../../db.php"; 
+include_once "../db.php"; 
 
 // Obtener el cuerpo del request
 $data = json_decode(file_get_contents("php://input"), true);
