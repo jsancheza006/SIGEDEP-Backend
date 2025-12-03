@@ -48,8 +48,8 @@ if (!$correo || !$contrasena) {
 // ------------------------------
 
 try {
-    // 1. Buscar al funcionario por Correo
-    $stmt = $conn->prepare("SELECT ID_Funcionario, Nombre, Apellido, Correo, Contrasena, Numero FROM funcionario WHERE Correo = ?");
+    // 1. Buscar al funcionario por Correo (incluye Rol)
+    $stmt = $conn->prepare("SELECT ID_Funcionario, Nombre, Apellido, Correo, Contrasena, Numero, Rol FROM funcionario WHERE Correo = ?");
     
     // Vincula el correo (s = string)
     $stmt->bind_param("s", $correo);
@@ -76,9 +76,9 @@ try {
         // La contraseña es correcta
 
         // Prepara los datos del usuario para la respuesta (SIN enviar el hash de vuelta)
-        unset($funcionario['Contrasena']); 
-        
-        // Éxito
+        unset($funcionario['Contrasena']);
+
+        // Éxito: incluye rol si existe
         echo json_encode([
             "success" => true,
             "user" => [
@@ -86,7 +86,8 @@ try {
                 "nombre" => $funcionario['Nombre'],
                 "apellido" => $funcionario['Apellido'],
                 "correo" => $funcionario['Correo'],
-                "numero" => $funcionario['Numero'] // Devolvemos los datos del funcionario
+                "numero" => $funcionario['Numero'], // Devolvemos los datos del funcionario
+                "rol" => isset($funcionario['Rol']) ? $funcionario['Rol'] : null
             ]
         ]);
         exit();

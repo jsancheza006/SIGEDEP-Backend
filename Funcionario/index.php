@@ -63,7 +63,7 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Los campos de la tabla que se seleccionan en las consultas GET
-$select_fields = "ID_Funcionario, Nombre, Apellido, Correo, Numero, Contrasena";
+$select_fields = "ID_Funcionario, Nombre, Apellido, Correo, Numero, Contrasena, Rol";
 
 
 /**
@@ -153,6 +153,7 @@ if ($method === 'POST') {
     $correo = $body['Correo'] ?? null;       // Obligatorio (¡C mayúscula!)
     $numero = $body['Numero'] ?? null;         // Obligatorio
     $contrasena = $body['Contrasena'] ?? null; // Obligatorio (Campo nuevo)
+    $rol = $body['Rol'] ?? null;               // Opcional (nuevo campo)
 
     // Valida que los campos obligatorios estén presentes
     if (!$nombre || !$apellido || !$correo || !$numero || !$contrasena) {
@@ -168,10 +169,10 @@ if ($method === 'POST') {
     if ($id !== null) {
         $id = (int)$id;
         // INSERT especificando el ID (sin AUTO_INCREMENT)
-        $stmt = $conn->prepare("INSERT INTO funcionario (ID_Funcionario, Nombre, Apellido, Correo, Numero, Contrasena) VALUES (?, ?, ?, ?, ?, ?)");
-        
-        // Vincula parámetros (i, s, s, s, s, s). Usamos $contrasena_hashed
-        $stmt->bind_param("isssss", $id, $nombre, $apellido, $correo, $numero, $contrasena_hashed);
+        $stmt = $conn->prepare("INSERT INTO funcionario (ID_Funcionario, Nombre, Apellido, Correo, Numero, Contrasena, Rol) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+        // Vincula parámetros (i, s, s, s, s, s, s). Usamos $contrasena_hashed y $rol
+        $stmt->bind_param("issssss", $id, $nombre, $apellido, $correo, $numero, $contrasena_hashed, $rol);
         
         // Ejecuta la inserción
         if ($stmt->execute()) {
@@ -183,10 +184,10 @@ if ($method === 'POST') {
         }
     } else {
         // Si NO se proporciona ID, deja que auto-incremente
-        $stmt = $conn->prepare("INSERT INTO funcionario (Nombre, Apellido, Correo, Numero, Contrasena) VALUES (?, ?, ?, ?, ?)");
-        
-        // Vincula parámetros (s, s, s, s, s). Usamos $contrasena_hashed
-        $stmt->bind_param("sssss", $nombre, $apellido, $correo, $numero, $contrasena_hashed);
+        $stmt = $conn->prepare("INSERT INTO funcionario (Nombre, Apellido, Correo, Numero, Contrasena, Rol) VALUES (?, ?, ?, ?, ?, ?)");
+
+        // Vincula parámetros (s, s, s, s, s, s). Usamos $contrasena_hashed y $rol
+        $stmt->bind_param("ssssss", $nombre, $apellido, $correo, $numero, $contrasena_hashed, $rol);
 
         // Ejecuta la inserción
         if ($stmt->execute()) {
@@ -238,9 +239,10 @@ if ($method === 'PUT') {
     $correo = $body['Correo'] ?? null; // ¡C mayúscula!
     $numero = $body['Numero'] ?? null;
     $contrasena = $body['Contrasena'] ?? null; // Campo nuevo
+    $rol = $body['Rol'] ?? null; // Campo nuevo (rol)
 
     // Valida que el ID sea obligatorio y al menos un campo para actualizar
-    if (!$id || (!$nombre && !$apellido && !$correo && !$numero && !$contrasena)) {
+    if (!$id || (!$nombre && !$apellido && !$correo && !$numero && !$contrasena && !$rol)) {
         http_response_code(400);
         echo json_encode(['error' => 'ID es obligatorio y al menos un campo para actualizar']);
         exit;
@@ -272,6 +274,11 @@ if ($method === 'PUT') {
     if ($numero) {
         $updates[] = "Numero = ?";
         $params[] = $numero;
+        $types .= "s";
+    }
+    if ($rol) {
+        $updates[] = "Rol = ?";
+        $params[] = $rol;
         $types .= "s";
     }
     // ⭐ Lógica de Hashing: Cifra la contraseña si se proporciona para actualizar
