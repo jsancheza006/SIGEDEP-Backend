@@ -63,7 +63,7 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Los campos de la tabla que se seleccionan en las consultas GET
-$select_fields = "ID_Funcionario, Nombre, Apellido, Correo, Numero, Contrasena, Rol";
+$select_fields = "ID_Funcionario, Nombre, Apellido, Correo, Numero, Rol";
 
 
 /**
